@@ -10,8 +10,8 @@ class HTTPService {
   final Dio dio = Dio();
   final GetIt getIt = GetIt.instance;
 
-  String? _base_url;
-  String? _api_key;
+  late String _base_url;
+  late String _api_key;
 
   // Constructor
   HTTPService() {
