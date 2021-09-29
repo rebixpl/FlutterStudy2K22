@@ -4,6 +4,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// Widgets
+import '../widgets/movie_tile.dart';
+
 // Models
 import '../models/search_category.dart';
 import '../models/movie.dart';
@@ -179,8 +182,8 @@ class MainPage extends ConsumerWidget {
           isAdult: false,
           description:
               "Hunted by the fearsome warrior Sub-Zero, MMA fighter Cole Young finds sanctuary at the temple of Lord Raiden. Training with experienced fighters Liu Kang, Kung Lao and the rogue mercenary Kano, Cole prepares to stand with Earth's greatest champions to take on the enemies from Outworld in a high-stakes battle for the universe.",
-          posterPath: "https://fwcdn.pl/fpo/78/05/107805/7948708.3.jpg",
-          backdropPath: "https://fwcdn.pl/fpo/78/05/107805/7948708.3.jpg",
+          posterPath: "nkayOAUBUu4mMvyNf9iHSUiPjF1.jpg",
+          backdropPath: "nkayOAUBUu4mMvyNf9iHSUiPjF1.jpg",
           rating: 7.8,
           releaseDate: "2021-04-07",
         ),
@@ -197,7 +200,11 @@ class MainPage extends ConsumerWidget {
             ),
             child: GestureDetector(
               onTap: () {},
-              child: Text(_movies[_count].name),
+              child: MovieTile(
+                height: _deviceHeight * 0.2,
+                width: _deviceWidth * 0.85,
+                movie: _movies[_count],
+              ),
             ),
           );
         },
