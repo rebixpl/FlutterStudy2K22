@@ -1,6 +1,8 @@
+// Dart
 import 'dart:ui';
 
 // Packages
+import 'package:flickd_app/controllers/main_page_data_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,13 +10,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/movie_tile.dart';
 
 // Models
+import '../models/main_page_data.dart';
 import '../models/search_category.dart';
 import '../models/movie.dart';
+
+// Controllers
+import '../controllers/main_page_data_controller.dart';
+
+// Provider (provides us with controller)
+final mainPageDataControllerProvider =
+    StateNotifierProvider<MainPageDataController, MainPageData>(
+  (ref) {
+    return MainPageDataController();
+  },
+);
 
 class MainPage extends ConsumerWidget {
   late double _deviceHeight;
   late double _deviceWidth;
   late TextEditingController _searchTextFieldController;
+
+  late MainPageDataController _mainPageDataController;
+  late MainPageData _mainPageData;
 
   MainPage({Key? key}) : super(key: key);
 
@@ -22,6 +39,10 @@ class MainPage extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
+
+    _mainPageDataController = watch(mainPageDataControllerProvider.notifier);
+    _mainPageData = watch(mainPageDataControllerProvider);
+
     _searchTextFieldController = TextEditingController();
     return _buildUI();
   }
@@ -142,13 +163,15 @@ class MainPage extends ConsumerWidget {
   Widget _categorySelectionWidget() {
     return DropdownButton(
       dropdownColor: Colors.black38,
-      value: SearchCategory.popular,
+      value: _mainPageData.searchCategory,
       icon: const Icon(Icons.menu, color: Colors.white24),
       underline: Container(
         height: 1,
         color: Colors.white24,
       ),
-      onChanged: (_value) {},
+      onChanged: (_value) => _value.toString().isNotEmpty
+          ? _mainPageDataController.updateSearchCategory(_value.toString())
+          : null,
       items: const [
         DropdownMenuItem(
           child: Text(
@@ -176,23 +199,7 @@ class MainPage extends ConsumerWidget {
   }
 
   Widget _moviesListViewWidget() {
-    final List<Movie> _movies = [];
-
-    for (var i = 0; i < 20; i++) {
-      _movies.add(
-        Movie(
-          name: "Mortal Kombat",
-          language: "EN",
-          isAdult: false,
-          description:
-              "Hunted by the fearsome warrior Sub-Zero, MMA fighter Cole Young finds sanctuary at the temple of Lord Raiden. Training with experienced fighters Liu Kang, Kung Lao and the rogue mercenary Kano, Cole prepares to stand with Earth's greatest champions to take on the enemies from Outworld in a high-stakes battle for the universe.",
-          posterPath: "nkayOAUBUu4mMvyNf9iHSUiPjF1.jpg",
-          backdropPath: "nkayOAUBUu4mMvyNf9iHSUiPjF1.jpg",
-          rating: 7.8,
-          releaseDate: "2021-04-07",
-        ),
-      );
-    }
+    final List<Movie> _movies = _mainPageData.movies;
 
     if (_movies.isNotEmpty) {
       return ListView.builder(

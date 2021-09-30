@@ -32,6 +32,8 @@ class HTTPService {
       };
 
       _query.addAll(query);
+      // debugPrint(_url);
+      // debugPrint(query.toString());
 
       return await dio.get(_url, queryParameters: _query);
     } on DioError catch (e) {
