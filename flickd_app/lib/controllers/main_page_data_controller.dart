@@ -33,6 +33,11 @@ class MainPageDataController extends StateNotifier<MainPageData> {
         }
       } else {
         // Perform text search
+        debugPrint(state.searchText);
+        _movies = await _movieService.searchMovies(
+          state.searchText,
+          page: state.page,
+        );
       }
 
       state = state.copyWith(
@@ -52,9 +57,26 @@ class MainPageDataController extends StateNotifier<MainPageData> {
         searchCategory: _category,
         searchText: "",
       );
+
       getMovies();
     } catch (e) {
       debugPrint("updateSearchCategory ERROR: $e");
+      throw Exception(e);
+    }
+  }
+
+  void updateTextSearch(String _searchText) {
+    try {
+      state = state.copyWith(
+        movies: [],
+        page: 1,
+        searchCategory: SearchCategory.none,
+        searchText: _searchText,
+      );
+
+      getMovies();
+    } catch (e) {
+      debugPrint("updateTextSearch ERROR: $e");
       throw Exception(e);
     }
   }

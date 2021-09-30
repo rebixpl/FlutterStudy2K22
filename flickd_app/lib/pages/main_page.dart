@@ -44,6 +44,8 @@ class MainPage extends ConsumerWidget {
     _mainPageData = watch(mainPageDataControllerProvider);
 
     _searchTextFieldController = TextEditingController();
+
+    _searchTextFieldController.text = _mainPageData.searchText;
     return _buildUI();
   }
 
@@ -139,7 +141,9 @@ class MainPage extends ConsumerWidget {
       height: _deviceHeight * 0.05,
       child: TextField(
         controller: _searchTextFieldController,
-        onSubmitted: (_input) {},
+        onSubmitted: (_input) {
+          _mainPageDataController.updateTextSearch(_input);
+        },
         style: const TextStyle(
           color: Colors.white,
         ),
@@ -202,25 +206,39 @@ class MainPage extends ConsumerWidget {
     final List<Movie> _movies = _mainPageData.movies;
 
     if (_movies.isNotEmpty) {
-      return ListView.builder(
-        itemCount: _movies.length,
-        shrinkWrap: true,
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (BuildContext context, int _count) {
-          return Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: _deviceHeight * 0.01,
-            ),
-            child: GestureDetector(
-              onTap: () {},
-              child: MovieTile(
-                height: _deviceHeight * 0.2,
-                width: _deviceWidth * 0.85,
-                movie: _movies[_count],
-              ),
-            ),
-          );
+      return NotificationListener(
+        onNotification: (Notification _onScrollNotification) {
+          if (_onScrollNotification is ScrollEndNotification) {
+            final before = _onScrollNotification.metrics.extentBefore;
+            final max = _onScrollNotification.metrics.maxScrollExtent;
+            if (before == max) {
+              _mainPageDataController.getMovies();
+              return true;
+            }
+            return false;
+          }
+          return false;
         },
+        child: ListView.builder(
+          itemCount: _movies.length,
+          shrinkWrap: true,
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: (BuildContext context, int _count) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: _deviceHeight * 0.01,
+              ),
+              child: GestureDetector(
+                onTap: () {},
+                child: MovieTile(
+                  height: _deviceHeight * 0.2,
+                  width: _deviceWidth * 0.85,
+                  movie: _movies[_count],
+                ),
+              ),
+            );
+          },
+        ),
       );
     } else {
       return const Center(

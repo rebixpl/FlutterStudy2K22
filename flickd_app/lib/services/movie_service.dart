@@ -1,5 +1,6 @@
 // Packages
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 
 // Services
@@ -44,7 +45,30 @@ class MovieService {
       }).toList();
       return _movies;
     } else {
-      throw Exception('ERROR: Couldn\'t load popular movies.');
+      throw Exception('ERROR: Couldn\'t load upcoming movies.');
+    }
+  }
+
+  Future<List<Movie>> searchMovies(
+    String _searchTerm, {
+    required int page,
+  }) async {
+    Response _response = await _http.get('/search/movie', query: {
+      'query': _searchTerm,
+      'page': page,
+    });
+    if (_response.statusCode == 200) {
+      // request was successful
+      Map _data = _response.data;
+      List<Movie> _movies;
+
+      _movies = _data['results'].map<Movie>((_movieData) {
+        return Movie.fromJson(_movieData);
+      }).toList();
+
+      return _movies;
+    } else {
+      throw Exception('ERROR: Couldn\'t perform movies search.');
     }
   }
 }
