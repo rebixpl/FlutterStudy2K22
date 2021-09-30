@@ -16,6 +16,8 @@ class MainPage extends ConsumerWidget {
   late double _deviceWidth;
   late TextEditingController _searchTextFieldController;
 
+  MainPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     _deviceHeight = MediaQuery.of(context).size.height;
@@ -26,6 +28,8 @@ class MainPage extends ConsumerWidget {
 
   Widget _buildUI() {
     return Scaffold(
+      resizeToAvoidBottomInset:
+          false, // UI is not longer required to resize when keyboard pops up
       backgroundColor: Colors.black,
       body: SizedBox(
         height: _deviceHeight,
@@ -68,10 +72,10 @@ class MainPage extends ConsumerWidget {
   Widget _foregroundWidgets() {
     return Container(
       padding: EdgeInsets.fromLTRB(0, _deviceHeight * 0.02, 0, 0),
-      width: _deviceHeight * 0.88,
+      width: _deviceWidth * 0.88,
       child: Column(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _topBarWidget(),
@@ -193,6 +197,8 @@ class MainPage extends ConsumerWidget {
     if (_movies.isNotEmpty) {
       return ListView.builder(
         itemCount: _movies.length,
+        shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
         itemBuilder: (BuildContext context, int _count) {
           return Padding(
             padding: EdgeInsets.symmetric(

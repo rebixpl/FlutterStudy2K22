@@ -21,13 +21,74 @@ class MovieTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _moviePosterWidget(movie.posterURL()),
+        _movieInfoWidget(),
+      ],
+    );
+  }
+
+  Widget _movieInfoWidget() {
+    return SizedBox(
+      height: height,
+      width: width * 0.66,
+      child: Column(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _moviePosterWidget(movie.posterURL()),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: width * 0.56,
+                child: Text(
+                  movie.name,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              Text(
+                movie.rating.toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 22.0,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.only(top: height * 0.02),
+            child: Text(
+              "${movie.language.toUpperCase()} | R: ${movie.isAdult} | ${movie.releaseDate}",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12.0,
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: height * 0.07),
+            child: Text(
+              movie.description,
+              maxLines: 9,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 10.0,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -36,7 +97,7 @@ class MovieTile extends StatelessWidget {
   Widget _moviePosterWidget(String _imageUrl) {
     return Container(
       height: height,
-      width: width,
+      width: width * 0.35,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: NetworkImage(_imageUrl),
