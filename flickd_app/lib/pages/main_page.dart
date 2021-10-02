@@ -25,9 +25,17 @@ final mainPageDataControllerProvider =
   },
 );
 
+final selectedMoviePosterURLProvider = StateProvider<String>((ref) {
+  final List<Movie> _movies = ref.watch(mainPageDataControllerProvider).movies;
+  return _movies.isNotEmpty ? _movies[0].posterURL() : "";
+});
+
 class MainPage extends ConsumerWidget {
   late double _deviceHeight;
   late double _deviceWidth;
+
+  late var _selectedMoviePosterURL;
+
   late TextEditingController _searchTextFieldController;
 
   late MainPageDataController _mainPageDataController;
@@ -42,6 +50,7 @@ class MainPage extends ConsumerWidget {
 
     _mainPageDataController = watch(mainPageDataControllerProvider.notifier);
     _mainPageData = watch(mainPageDataControllerProvider);
+    _selectedMoviePosterURL = watch(selectedMoviePosterURLProvider);
 
     _searchTextFieldController = TextEditingController();
 
@@ -69,27 +78,35 @@ class MainPage extends ConsumerWidget {
   }
 
   Widget _backgroundWidget() {
-    return Container(
-      height: _deviceHeight,
-      width: _deviceWidth,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        image: const DecorationImage(
-          fit: BoxFit.cover,
-          image: NetworkImage(
-            "https://www.getaway.co.za/wp-content/uploads/2020/05/Africa.jpg",
+    if (_selectedMoviePosterURL.state != "") {
+      return Container(
+        height: _deviceHeight,
+        width: _deviceWidth,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: NetworkImage(
+              _selectedMoviePosterURL.state,
+            ),
           ),
         ),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.2),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.2),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return Container(
+        height: _deviceHeight,
+        width: _deviceWidth,
+        color: Colors.black,
+      );
+    }
   }
 
   Widget _foregroundWidgets() {
@@ -142,24 +159,25 @@ class MainPage extends ConsumerWidget {
       child: TextField(
         controller: _searchTextFieldController,
         onSubmitted: (_input) {
-          _mainPageDataController.updateTextSearch(_input);
+          _mainPageDataController.updateTextSearch(_input.trim());
         },
         style: const TextStyle(
           color: Colors.white,
         ),
         decoration: InputDecoration(
-            focusedBorder: _border,
-            border: _border,
-            prefixIcon: const Icon(
-              Icons.search,
-              color: Colors.white24,
-            ),
-            hintStyle: const TextStyle(
-              color: Colors.white54,
-            ),
-            filled: false,
-            fillColor: Colors.white24,
-            hintText: "Search...."),
+          focusedBorder: _border,
+          border: _border,
+          prefixIcon: const Icon(
+            Icons.search,
+            color: Colors.white24,
+          ),
+          hintStyle: const TextStyle(
+            color: Colors.white54,
+          ),
+          filled: false,
+          fillColor: Colors.white24,
+          hintText: "Search....",
+        ),
       ),
     );
   }
@@ -229,7 +247,9 @@ class MainPage extends ConsumerWidget {
                 vertical: _deviceHeight * 0.01,
               ),
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  _selectedMoviePosterURL.state = _movies[_count].posterURL();
+                },
                 child: MovieTile(
                   height: _deviceHeight * 0.2,
                   width: _deviceWidth * 0.85,

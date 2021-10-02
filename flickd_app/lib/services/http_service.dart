@@ -30,12 +30,15 @@ class HTTPService {
         'api_key': _api_key,
         'language': 'en-US',
       };
-
       _query.addAll(query);
+      debugPrint("_query" + _query.toString());
       // debugPrint(_url);
       // debugPrint(query.toString());
 
-      return await dio.get(_url, queryParameters: _query);
+      return await dio.get(
+        _url,
+        queryParameters: _query,
+      );
     } on DioError catch (e) {
       debugPrint(
           'DioError: Unable to perform get request.'); // Use debugPrint because it'll only show data in debug mode and will not run in release mode

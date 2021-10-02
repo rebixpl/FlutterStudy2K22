@@ -54,7 +54,7 @@ class MovieService {
     required int page,
   }) async {
     Response _response = await _http.get('/search/movie', query: {
-      'query': _searchTerm,
+      'query': Uri.parse(_searchTerm),
       'page': page,
     });
     if (_response.statusCode == 200) {
@@ -65,6 +65,8 @@ class MovieService {
       _movies = _data['results'].map<Movie>((_movieData) {
         return Movie.fromJson(_movieData);
       }).toList();
+
+      debugPrint("MOVIES " + _movies.toString());
 
       return _movies;
     } else {

@@ -33,7 +33,9 @@ class MainPageDataController extends StateNotifier<MainPageData> {
         }
       } else {
         // Perform text search
-        debugPrint(state.searchText);
+        debugPrint("P:" + state.page.toString());
+        debugPrint("ST:" + state.searchText);
+
         _movies = await _movieService.searchMovies(
           state.searchText,
           page: state.page,
