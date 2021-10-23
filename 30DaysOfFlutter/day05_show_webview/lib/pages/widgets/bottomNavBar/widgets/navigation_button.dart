@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class NavigationButton extends StatelessWidget {
-  final Function() onPressed;
+  final Function(WebViewController) onPressed;
   final IconData icon;
   final Completer<WebViewController> webViewController;
 
@@ -27,14 +27,11 @@ class NavigationButton extends StatelessWidget {
       ) {
         if (snapshot.hasData) {
           return IconButton(
-            onPressed: onPressed,
+            onPressed: () => onPressed(snapshot.data!),
             icon: Icon(icon),
-            color: Colors.white,
           );
         } else {
-          return Container(
-            child: Text("data"),
-          );
+          return Container();
         }
       },
     );
