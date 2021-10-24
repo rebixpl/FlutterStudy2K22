@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 // Pages
 import './pages/game_screen.dart';
 
+// Data
+import './data/global_variables.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -18,9 +21,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      home: GameScreen(),
+      home: const GameScreen(),
     );
   }
 }

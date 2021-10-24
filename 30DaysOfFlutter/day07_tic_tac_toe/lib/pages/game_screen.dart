@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 // Widgets
 import './widgets/board_tiles.dart';
 
-// Data
-import '../data/tile_state.dart';
-
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
 
@@ -15,8 +12,6 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  final List<TileState> _boardState = List.filled(9, TileState.EMPTY);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +19,7 @@ class _GameScreenState extends State<GameScreen> {
         child: Stack(
           children: [
             Image.asset('images/board.png'),
-            BoardTiles(
-              boardState: _boardState,
-            ),
+            const BoardTiles(),
           ],
         ),
       ),
