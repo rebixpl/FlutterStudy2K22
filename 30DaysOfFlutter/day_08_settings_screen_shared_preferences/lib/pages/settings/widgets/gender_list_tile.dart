@@ -7,12 +7,12 @@ import '../../../models/models.dart';
 class GenderListTile extends StatelessWidget {
   final int index;
   final Gender selectedGender;
-  final Function(Gender?) onChanged;
+  final Function(Gender) selectedGenderCallback;
   const GenderListTile({
     Key? key,
     required this.index,
     required this.selectedGender,
-    required this.onChanged,
+    required this.selectedGenderCallback,
   }) : super(key: key);
 
   @override
@@ -21,7 +21,9 @@ class GenderListTile extends StatelessWidget {
       title: Text(_getGenderLabel(Gender.values[index])),
       value: Gender.values[index],
       groupValue: selectedGender,
-      onChanged: onChanged,
+      onChanged: (Gender? newGender) {
+        if (newGender != null) selectedGenderCallback(newGender);
+      },
     );
   }
 
