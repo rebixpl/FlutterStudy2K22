@@ -30,10 +30,20 @@ class DataService {
     final response = await http.get(uri);
     print('Response status: ${response.statusCode}');
 
-    // ---------------------- zzz5
-    final json = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
 
-    // ---------------------- zzz6
-    return WeatherResponse.fromJson(json);
+      // ---------------------- zzz5
+      final json = jsonDecode(response.body);
+
+      // ---------------------- zzz6
+      return WeatherResponse.fromJson(json,
+          responseStatus: response.statusCode);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception("Failed to load weather data");
+    }
   }
 }

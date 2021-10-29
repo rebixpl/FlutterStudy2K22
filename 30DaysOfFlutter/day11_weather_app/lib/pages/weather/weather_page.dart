@@ -25,16 +25,21 @@ class _WeatherPageState extends State<WeatherPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_weatherResponse != null)
-              Column(
-                children: [
-                  Text(
-                    "${_weatherResponse!.temperatureInfo.temperature}",
-                    style: const TextStyle(fontSize: 40.0),
-                  ),
-                  Text(_weatherResponse!.weatherInfo.description),
-                ],
-              ),
+            (_weatherResponse != null)
+                ? Column(
+                    children: [
+                      Image.network(
+                        _weatherResponse!.iconUrl,
+                        width: 150.0,
+                      ),
+                      Text(
+                        "${_weatherResponse!.temperatureInfo.temperature}",
+                        style: const TextStyle(fontSize: 40.0),
+                      ),
+                      Text(_weatherResponse!.weatherInfo.description),
+                    ],
+                  )
+                : const SizedBox.shrink(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 58.0),
               child: SizedBox(

@@ -17,15 +17,26 @@ class WeatherResponse {
   final String cityName;
   final TemperatureInfo temperatureInfo;
   final WeatherInfo weatherInfo;
+  final int responseStatus;
+
+  String get iconUrl {
+    return cityName != "Wadowice"
+        ? "https://openweathermap.org/img/wn/${weatherInfo.icon}@2x.png"
+        : "https://piekarniagrzybki.pl/wp-content/uploads/2017/12/kremowka.jpg";
+  }
 
   WeatherResponse({
     required this.cityName,
     required this.temperatureInfo,
     required this.weatherInfo,
+    required this.responseStatus,
   });
 
   //------------------- zzz4
-  factory WeatherResponse.fromJson(Map<String, dynamic> json) {
+  factory WeatherResponse.fromJson(
+    Map<String, dynamic> json, {
+    required int responseStatus,
+  }) {
     final cityName = json["name"];
     final temperatureInfo = TemperatureInfo.fromJson(json["main"]);
     final weatherInfo = WeatherInfo.fromJson(json["weather"][0]);
@@ -34,6 +45,7 @@ class WeatherResponse {
       cityName: cityName as String,
       temperatureInfo: temperatureInfo,
       weatherInfo: weatherInfo,
+      responseStatus: responseStatus,
     );
   }
 }
