@@ -17,6 +17,7 @@ class DataService {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body) as List;
         final posts = json.map((postJson) => Post.fromJson(postJson)).toList();
+        posts.shuffle();
         return posts;
       } else {
         throw ('Request failed with status: ${response.statusCode}.');
