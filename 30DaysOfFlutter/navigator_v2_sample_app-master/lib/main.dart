@@ -7,7 +7,21 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Book _selectedBook;
+
+  void _handleBookTapped(Book book) {
+    setState(() {
+      _selectedBook = book;
+    });
+    debugPrint(_selectedBook.title);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,52 +35,70 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: HomePage(),
+      home: Navigator(
+        pages: [
+          MaterialPage(
+              child: HomePage(
+            onTap: (Book book) => _handleBookTapped(book),
+          )),
+          if (_selectedBook != null)
+            MaterialPage(
+              child: BookPage(book: _selectedBook),
+            ),
+        ],
+        onPopPage: (route, result) {
+          if (!route.didPop(result)) return false;
+
+          setState(() {
+            _selectedBook = null;
+          });
+          debugPrint(_selectedBook.toString());
+
+          return true;
+        },
+      ),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
+  final ValueChanged<Book> onTap;
+
+  const HomePage({Key key, @required this.onTap}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0),
-        child: Column(children: [
-          SizedBox(height: 20),
-          FakeAppBar(),
-          SizedBox(height: 20),
-          FakeTabBar(),
-          SizedBox(height: 20),
-          Expanded(
-            child: GridView.count(
-              childAspectRatio: 48 / 78,
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              children: List.generate(books.length, (index) {
-                final book = books[index];
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return BookPage(book: book);
-                        },
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+          child: Column(children: [
+            SizedBox(height: 20),
+            FakeAppBar(),
+            SizedBox(height: 20),
+            FakeTabBar(),
+            SizedBox(height: 20),
+            Expanded(
+              child: GridView.count(
+                childAspectRatio: 48 / 78,
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                children: List.generate(books.length, (index) {
+                  final book = books[index];
+                  return InkWell(
+                    onTap: () => onTap(book),
+                    child: Card(
+                      child: Image.asset(
+                        book.image,
+                        fit: BoxFit.fill,
                       ),
-                    );
-                  },
-                  child: Card(
-                    child: Image.asset(
-                      book.image,
-                      fit: BoxFit.fill,
                     ),
-                  ),
-                );
-              }),
-            ),
-          )
-        ]),
+                  );
+                }),
+              ),
+            )
+          ]),
+        ),
       ),
     );
   }
