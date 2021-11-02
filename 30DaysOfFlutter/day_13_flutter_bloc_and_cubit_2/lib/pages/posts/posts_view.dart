@@ -3,9 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// Models
-import '../../models/post.dart';
-
 // Bloc
 import "bloc/posts_bloc.dart";
 
