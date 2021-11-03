@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// Pages
-import './pages/posts/posts_view.dart';
-
 // Bloc
 import "./pages/posts/bloc/posts_bloc.dart";
 import './navigation/nav_cubit.dart';
+
+// Navigator
+import 'navigation/app_navigator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
             create: (context) => NavCubit(),
           ),
         ],
-        child: PostsView(),
+        child: const AppNavigator(),
       ),
     );
   }
