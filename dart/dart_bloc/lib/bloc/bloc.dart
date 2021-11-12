@@ -1,14 +1,19 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 
 abstract class CounterEvent {}
 
 class Increment extends CounterEvent {}
 
+class ThisIsAnError extends CounterEvent {}
+
 class CounterBloc extends Bloc<CounterEvent, int> {
   CounterBloc() : super(0) {
     on<Increment>((event, emit) {
+      emit(state + 1);
+    });
+
+    on<ThisIsAnError>((event, emit) {
+      addError(Exception('This is an error'), StackTrace.current);
       emit(state + 1);
     });
   }
@@ -37,6 +42,12 @@ class CounterBloc extends Bloc<CounterEvent, int> {
   void onEvent(CounterEvent event) {
     super.onEvent(event);
     print(event);
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    print("$error, $stackTrace");
+    super.onError(error, stackTrace);
   }
 }
 
