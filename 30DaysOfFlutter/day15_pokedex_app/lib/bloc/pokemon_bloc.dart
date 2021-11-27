@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:day15_pokedex_app/pokemon_page_response.dart';
-import 'package:day15_pokedex_app/pokemon_repository.dart';
+import 'package:day15_pokedex_app/data/pokemon_page_response.dart';
+import 'package:day15_pokedex_app/data/pokemon_repository.dart';
 import 'package:meta/meta.dart';
 
 part 'pokemon_event.dart';
