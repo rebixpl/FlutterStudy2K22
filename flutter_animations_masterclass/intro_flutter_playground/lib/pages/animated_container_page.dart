@@ -48,7 +48,8 @@ class _AnimatedContainerPageState extends State<AnimatedContainerPage> {
             color: _color,
             borderRadius: _borderRadius,
           ),
-          duration: Duration(milliseconds: 100),
+          curve: Curves.easeOutQuart,
+          duration: Duration(milliseconds: 300),
         ),
       ),
       floatingActionButton: FloatingActionButton(

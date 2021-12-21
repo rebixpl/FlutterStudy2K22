@@ -39,13 +39,10 @@ class MyApp extends StatelessWidget {
           case 'animatedContainer':
             return MaterialPageRoute(builder: (_) => AnimatedContainerPage());
           case 'animatedOpacity':
-            return MaterialPageRoute(
-              builder: (_) => Container(),
-            ); //AnimatedOpacityPage());
+            return MaterialPageRoute(builder: (_) => AnimatedOpacityPage());
           case 'tweenAnimationBuilder':
             return MaterialPageRoute(
-              builder: (_) => Container(),
-            ); //TweenAnimationBuilderPage());
+                builder: (_) => TweenAnimationBuilderPage());
           default:
             throw UnimplementedError('Route ${settings.name} not implemented');
         }
