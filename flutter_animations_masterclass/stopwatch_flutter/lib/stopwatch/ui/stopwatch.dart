@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:stopwatch_flutter/ui/reset_button.dart';
-import 'package:stopwatch_flutter/ui/start_stop_button.dart';
-import 'package:stopwatch_flutter/ui/stopwatch_renderer.dart';
+import 'package:stopwatch_flutter/stopwatch/ui/reset_button.dart';
+import 'package:stopwatch_flutter/stopwatch/ui/start_stop_button.dart';
+import 'package:stopwatch_flutter/stopwatch/ui/stopwatch_renderer.dart';
 
 class Stopwatch extends StatefulWidget {
   const Stopwatch({Key? key}) : super(key: key);
@@ -70,9 +70,12 @@ class _StopwatchState extends State<Stopwatch>
         return Stack(
           children: [
             StopwatchRenderer(
-              elapsed: _elapsed,
               radius: radius,
             ),
+            // StopwatchTickerUI(
+            //   elapsed: _elapsed,
+            //   radius: radius,
+            // ),
             Align(
               alignment: Alignment.bottomLeft,
               child: SizedBox(

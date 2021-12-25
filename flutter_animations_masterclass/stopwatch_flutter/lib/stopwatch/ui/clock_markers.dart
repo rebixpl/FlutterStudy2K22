@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:stopwatch_flutter/ui/elapsed_time_text.dart';
 
 class ClockSecondsTickMarker extends StatelessWidget {
   const ClockSecondsTickMarker({
