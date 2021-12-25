@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:stopwatch_flutter/ui/elapsed_time_text.dart';
+import 'package:stopwatch_flutter/ui/stopwatch_renderer.dart';
 
 class Stopwatch extends StatefulWidget {
   const Stopwatch({Key? key}) : super(key: key);
@@ -35,8 +35,13 @@ class _StopwatchState extends State<Stopwatch>
 
   @override
   Widget build(BuildContext context) {
-    return ElapsedTimeText(
-      elapsed: _elapsed,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return StopwatchRenderer(
+          elapsed: _elapsed,
+          radius: constraints.maxWidth / 2,
+        );
+      },
     );
   }
 }
