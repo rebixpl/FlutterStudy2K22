@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stopwatch_flutter/stopwatch/bloc/laps/laps_bloc.dart';
 import 'package:stopwatch_flutter/stopwatch/bloc/stopwatch/stopwatch_bloc.dart';
 import 'package:stopwatch_flutter/stopwatch/ui/add_lap_button.dart';
 import 'package:stopwatch_flutter/stopwatch/ui/elapsed_time_text.dart';
@@ -25,95 +26,115 @@ class StopwatchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final radius = constraints.maxWidth / 2;
-        return Column(
-          children: [
-            Stack(
-              children: [
-                SizedBox(
-                  height: 400.0,
-                  width: double.infinity,
-                  child: StopwatchRenderer(
-                    radius: radius,
-                  ),
-                ),
-                SizedBox(
-                  height: 400.0,
-                  width: double.infinity,
-                  child: BlocProvider<StopwatchBloc>(
-                    create: (context) => StopwatchBloc(ticker: const Ticker()),
-                    child: Builder(
-                      builder: (context) {
-                        return Stack(
-                          children: [
-                            StopwatchTickerUI(
-                              elapsed: Duration(
-                                milliseconds: context.select(
-                                    (StopwatchBloc bloc) =>
-                                        bloc.state.duration),
-                              ),
-                              radius: radius,
-                            ),
-                            Text(context.select((StopwatchBloc bloc) =>
-                                bloc.state.duration.toString())),
-                            const Actions(),
-                          ],
-                        );
-                      },
+    return BlocProvider<LapsBloc>(
+      create: (context) => LapsBloc(),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final radius = constraints.maxWidth / 2;
+          return Column(
+            children: [
+              Stack(
+                children: [
+                  SizedBox(
+                    height: 400.0,
+                    width: double.infinity,
+                    child: StopwatchRenderer(
+                      radius: radius,
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20.0),
-            Expanded(
-              child: Builder(
-                builder: (context) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            const Text("Total Time: "),
-                            ElapsedTimeText(
-                              isLapList: true,
-                              elapsed: Duration(milliseconds: 21360),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 6,
-                        child: ListView.separated(
-                          physics: const BouncingScrollPhysics(),
-                          separatorBuilder: (context, index) =>
-                              const Divider(color: Colors.grey, height: 1.0),
-                          itemCount: 13,
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              dense: true,
-                              title: Text("Lap ${index + 1}"),
-                              subtitle: const ElapsedTimeText(
-                                isLapList: true,
-                                elapsed: Duration(milliseconds: 6360),
+                  SizedBox(
+                    height: 400.0,
+                    width: double.infinity,
+                    child: BlocProvider<StopwatchBloc>(
+                      create: (context) =>
+                          StopwatchBloc(ticker: const Ticker()),
+                      child: Builder(
+                        builder: (context) {
+                          return Stack(
+                            children: [
+                              StopwatchTickerUI(
+                                elapsed: Duration(
+                                  milliseconds: context.select(
+                                      (StopwatchBloc bloc) =>
+                                          bloc.state.duration),
+                                ),
+                                radius: radius,
                               ),
-                            );
-                          },
-                        ),
+                              Text(context.select((StopwatchBloc bloc) =>
+                                  bloc.state.duration.toString())),
+                              const Actions(),
+                            ],
+                          );
+                        },
                       ),
-                    ],
-                  );
-                },
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        );
+              const SizedBox(height: 20.0),
+              Expanded(
+                child: const LapsWidget(),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class LapsWidget extends StatelessWidget {
+  const LapsWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LapsBloc, LapsState>(
+      // buildWhen: (prev, current) => prev.runtimeType != current.runtimeType,
+      builder: (BuildContext context, LapsState state) {
+        if (state is LapsInitial) {
+          return const SizedBox();
+        } else if (state is LapsRunInProgress) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Row(
+                  children: [
+                    const Text("Total Time: "),
+                    ElapsedTimeText(
+                      isLapList: true,
+                      elapsed: Duration(milliseconds: state.totalTime),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 6,
+                child: ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  separatorBuilder: (context, index) =>
+                      const Divider(color: Colors.grey, height: 1.0),
+                  itemCount: state.laps.length,
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      title: Text("Lap ${index + 1}"),
+                      subtitle: ElapsedTimeText(
+                        isLapList: true,
+                        elapsed: Duration(milliseconds: state.laps[index]),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        } else {
+          return const SizedBox();
+        }
       },
     );
   }
@@ -153,16 +174,24 @@ class Actions extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: AddLapButton(
-                  onPressed: () => context
-                      .read<StopwatchBloc>()
-                      .add(const StopwatchPaused()),
+                  onPressed: () {
+                    context.read<StopwatchBloc>().add(const StopwatchPaused());
+                    context.read<LapsBloc>().add(
+                          LapAdded(
+                            lapDuration:
+                                context.read<StopwatchBloc>().state.duration,
+                          ),
+                        );
+                  },
                 ),
               ),
               Align(
                 alignment: Alignment.bottomLeft,
                 child: ResetButton(
-                  onPressed: () =>
-                      context.read<StopwatchBloc>().add(const StopwatchReset()),
+                  onPressed: () {
+                    context.read<StopwatchBloc>().add(const StopwatchReset());
+                    context.read<LapsBloc>().add(const LapsReset());
+                  },
                 ),
               ),
             ],
@@ -179,8 +208,10 @@ class Actions extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomLeft,
                 child: ResetButton(
-                  onPressed: () =>
-                      context.read<StopwatchBloc>().add(const StopwatchReset()),
+                  onPressed: () {
+                    context.read<StopwatchBloc>().add(const StopwatchReset());
+                    context.read<LapsBloc>().add(const LapsReset());
+                  },
                 ),
               ),
             ],

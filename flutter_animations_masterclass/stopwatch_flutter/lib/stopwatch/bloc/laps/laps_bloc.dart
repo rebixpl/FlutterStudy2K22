@@ -5,27 +5,29 @@ part 'laps_event.dart';
 part 'laps_state.dart';
 
 class LapsBloc extends Bloc<LapsEvent, LapsState> {
-  static const List<int> _laps = [];
-  static const int _totalTime = 0;
+  int _lastTime = 0;
+  List<int> _laps = [];
 
-  LapsBloc() : super(const LapsInitial(_laps, _totalTime)) {
+  LapsBloc() : super(const LapsInitial([], 0)) {
     on<LapAdded>(_addLap);
     on<LapsReset>(_resetLaps);
   }
 
   void _addLap(LapAdded event, Emitter<LapsState> emit) {
-    state.laps.add(event.lapDuration);
-
+    // _lastTime -
+    _laps.add(event.lapDuration);
+    print("_laps: $_laps");
     emit(
       LapsRunInProgress(
-        state.laps,
-        state.laps.fold(0, (prev, curr) => prev + curr), // total time
+        _laps,
+        _laps.fold(0, (prev, curr) => prev + curr), // total time
       ),
     );
   }
 
   void _resetLaps(LapsReset event, Emitter<LapsState> emit) {
-    state.laps.clear();
-    emit(const LapsInitial(_laps, _totalTime));
+    _laps = [];
+    print("_laps: $_laps");
+    emit(const LapsInitial([], 0));
   }
 }
