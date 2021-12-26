@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 part 'laps_event.dart';
 part 'laps_state.dart';
@@ -14,13 +15,20 @@ class LapsBloc extends Bloc<LapsEvent, LapsState> {
   }
 
   void _addLap(LapAdded event, Emitter<LapsState> emit) {
-    // _lastTime -
-    _laps.add(event.lapDuration);
-    print("_laps: $_laps");
+    _laps.add(event.lapDuration - _lastTime);
+    _lastTime = event.lapDuration;
+
+    /// DEBUG
+    debugPrint("_laps: $_laps");
+    debugPrint(" total: " +
+        _laps.fold(0, (int prev, int curr) => prev + curr).toString());
+
+    /// DEBUG
+
     emit(
       LapsRunInProgress(
         _laps,
-        _laps.fold(0, (prev, curr) => prev + curr), // total time
+        _laps.fold(0, (int prev, int curr) => prev + curr), // total time
       ),
     );
   }
