@@ -2,7 +2,7 @@
 
 Simple stopwatch with animated clock face, created with **flutter_bloc** state management.
 
-####You can:
+### You can:
  <ul>
     <li>Start / Stop the stopwatch</li>
     <li>Reset the stopwatch</li>
@@ -10,7 +10,8 @@ Simple stopwatch with animated clock face, created with **flutter_bloc** state m
  </ul>
 
 ## Screens:
-![App_Screenshot Image](screens\s2.png)
+![s2](https://user-images.githubusercontent.com/33410494/147411810-8c004c69-2d2b-49ed-ae86-d34c554d8965.png)
+
 
 ## File Tree
 
