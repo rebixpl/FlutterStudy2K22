@@ -78,7 +78,7 @@ class StopwatchView extends StatelessWidget {
                         flex: 1,
                         child: Row(
                           children: [
-                            Text("Total Time: "),
+                            const Text("Total Time: "),
                             ElapsedTimeText(
                               isLapList: true,
                               elapsed: Duration(milliseconds: 21360),
@@ -90,7 +90,8 @@ class StopwatchView extends StatelessWidget {
                         flex: 6,
                         child: ListView.separated(
                           physics: const BouncingScrollPhysics(),
-                          separatorBuilder: (context, index) => const Divider(),
+                          separatorBuilder: (context, index) =>
+                              const Divider(color: Colors.grey, height: 1.0),
                           itemCount: 13,
                           padding: EdgeInsets.zero,
                           itemBuilder: (context, index) {
