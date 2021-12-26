@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class StartStopButton extends StatelessWidget {
-  const StartStopButton({
+class StartPauseButton extends StatelessWidget {
+  const StartPauseButton({
     Key? key,
     this.onPressed,
     required this.isRunning,
@@ -12,14 +12,18 @@ class StartStopButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipOval(
-      child: Material(
-        color: isRunning ? Colors.red[900] : Colors.green[900],
-        child: InkWell(
-          onTap: onPressed,
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(isRunning ? "Stop" : "Start"),
+    return SizedBox(
+      width: 80.0,
+      height: 80.0,
+      child: ClipOval(
+        child: Material(
+          color: isRunning ? Colors.red[900] : Colors.green[900],
+          child: InkWell(
+            onTap: onPressed,
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(isRunning ? "Pause" : "Start"),
+            ),
           ),
         ),
       ),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class ClockHand extends StatelessWidget {
@@ -21,10 +23,28 @@ class ClockHand extends StatelessWidget {
       transform: Matrix4.identity()
         ..translate(-handThickness / 2)
         ..rotateZ(rotationZAngle),
-      child: Container(
-        height: handLength,
-        width: handThickness,
-        color: color,
+      child: Stack(
+        children: [
+          Container(
+            height: handLength,
+            width: handThickness,
+            color: color,
+          ),
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.identity()
+              ..translate(handThickness * 5.5, handLength / 1.09, 0.0)
+              ..rotateZ(90 * pi / 180),
+            child: SizedBox(
+              width: handThickness,
+              height: handThickness,
+              child: const Icon(
+                Icons.keyboard_arrow_right,
+                color: Colors.orange,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

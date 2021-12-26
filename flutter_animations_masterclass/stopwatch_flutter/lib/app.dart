@@ -29,10 +29,7 @@ class MyHomePage extends StatelessWidget {
         body: Center(
           child: Padding(
             padding: EdgeInsets.all(32.0),
-            child: AspectRatio(
-              aspectRatio: 0.85,
-              child: Stopwatch(),
-            ),
+            child: Stopwatch(),
           ),
         ),
       ),

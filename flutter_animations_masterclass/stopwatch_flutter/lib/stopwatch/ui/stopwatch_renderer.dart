@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stopwatch_flutter/stopwatch/ui/clock_hand_circle.dart';
 import 'package:stopwatch_flutter/stopwatch/ui/clock_markers.dart';
 
 class StopwatchRenderer extends StatelessWidget {
