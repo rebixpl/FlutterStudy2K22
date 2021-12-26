@@ -26,10 +26,12 @@ class MyHomePage extends StatelessWidget {
     return const AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.all(32.0),
-            child: Stopwatch(),
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(32.0),
+              child: Stopwatch(),
+            ),
           ),
         ),
       ),

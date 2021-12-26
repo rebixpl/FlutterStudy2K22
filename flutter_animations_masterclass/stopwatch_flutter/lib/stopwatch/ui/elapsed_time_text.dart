@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ElapsedTimeText extends StatelessWidget {
-  const ElapsedTimeText({Key? key, required this.elapsed}) : super(key: key);
+  const ElapsedTimeText({
+    Key? key,
+    required this.elapsed,
+    this.isLapList = false,
+  }) : super(key: key);
+
   final Duration elapsed;
+  final bool isLapList;
 
   @override
   Widget build(BuildContext context) {
@@ -12,27 +18,67 @@ class ElapsedTimeText extends StatelessWidget {
     final hundredsStr = hundreds.toStringAsFixed(0).padLeft(2, '0');
     final secondsStr = seconds.toString().padLeft(2, '0');
     final minutesStr = minutes.toString().padLeft(2, '0');
-    const digitWidth = 12.0;
+    final digitWidth = isLapList ? 8.0 : 12.0;
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment:
+          isLapList ? MainAxisAlignment.start : MainAxisAlignment.center,
       children: [
-        TimeDigit(minutesStr.substring(0, 1), width: digitWidth),
-        TimeDigit(minutesStr.substring(1, 2), width: digitWidth),
-        const TimeDigit(':', width: 6),
-        TimeDigit(secondsStr.substring(0, 1), width: digitWidth),
-        TimeDigit(secondsStr.substring(1, 2), width: digitWidth),
-        const TimeDigit('.', width: 6),
-        TimeDigit(hundredsStr.substring(0, 1), width: digitWidth),
-        TimeDigit(hundredsStr.substring(1, 2), width: digitWidth),
+        TimeDigit(
+          minutesStr.substring(0, 1),
+          width: digitWidth,
+          isLapList: isLapList,
+        ),
+        TimeDigit(
+          minutesStr.substring(1, 2),
+          width: digitWidth,
+          isLapList: isLapList,
+        ),
+        TimeDigit(
+          ':',
+          width: 6,
+          isLapList: isLapList,
+        ),
+        TimeDigit(
+          secondsStr.substring(0, 1),
+          width: digitWidth,
+          isLapList: isLapList,
+        ),
+        TimeDigit(
+          secondsStr.substring(1, 2),
+          width: digitWidth,
+          isLapList: isLapList,
+        ),
+        TimeDigit(
+          '.',
+          width: 6,
+          isLapList: isLapList,
+        ),
+        TimeDigit(
+          hundredsStr.substring(0, 1),
+          width: digitWidth,
+          isLapList: isLapList,
+        ),
+        TimeDigit(
+          hundredsStr.substring(1, 2),
+          width: digitWidth,
+          isLapList: isLapList,
+        ),
       ],
     );
   }
 }
 
 class TimeDigit extends StatelessWidget {
-  const TimeDigit(this.text, {Key? key, required this.width}) : super(key: key);
+  const TimeDigit(
+    this.text, {
+    Key? key,
+    required this.width,
+    required this.isLapList,
+  }) : super(key: key);
+
   final String text;
   final double width;
+  final bool isLapList;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +86,7 @@ class TimeDigit extends StatelessWidget {
       width: width,
       child: Text(
         text,
-        style: const TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: isLapList ? 14.0 : 20.0),
         textAlign: TextAlign.center,
       ),
     );
