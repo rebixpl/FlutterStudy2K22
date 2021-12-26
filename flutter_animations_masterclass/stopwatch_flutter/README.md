@@ -1,16 +1,58 @@
-# stopwatch_flutter
+# Gigachad Stopwatch
 
-A new Flutter project.
+Simple stopwatch with animated clock face, created with **flutter_bloc** state management.
 
-## Getting Started
+####You can:
+ <ul>
+    <li>Start / Stop the stopwatch</li>
+    <li>Reset the stopwatch</li>
+    <li>Add time to laps list</li>
+ </ul>
 
-This project is a starting point for a Flutter application.
+## Screens:
+![App_Screenshot Image](screens\s2.png)
 
-A few resources to get you started if this is your first Flutter project:
+## File Tree
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+STOPWATCH_FLUTTER\LIB
+│   app.dart
+│   main.dart
+│   ticker.dart
+│
+└───stopwatch
+    ├───bloc
+    │   ├───laps
+    │   │       laps_bloc.dart
+    │   │       laps_event.dart
+    │   │       laps_state.dart
+    │   │
+    │   └───stopwatch
+    │           stopwatch_bloc.dart
+    │           stopwatch_event.dart
+    │           stopwatch_state.dart
+    │
+    └───ui
+        │   laps.dart
+        │   stopwatch.dart
+        │
+        ├───stopwatch
+        │       stopwatch_actions.dart
+        │       stopwatch_renderer.dart
+        │       stopwatch_ticker_ui.dart
+        │
+        └───widgets
+            ├───buttons
+            │       add_lap_button.dart
+            │       reset_button.dart
+            │       start_stop_button.dart
+            │
+            ├───clock
+            │       clock_hand.dart
+            │       clock_hand_circle.dart
+            │       clock_markers.dart
+            │
+            └───text
+                    elapsed_time_text.dart
+                    elapsed_time_text_basic.dart
+```
