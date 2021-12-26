@@ -35,7 +35,7 @@ class LapsBloc extends Bloc<LapsEvent, LapsState> {
 
   void _resetLaps(LapsReset event, Emitter<LapsState> emit) {
     _laps = [];
-    print("_laps: $_laps");
+    debugPrint("_laps: $_laps");
     emit(const LapsInitial([], 0));
   }
 }
