@@ -12,6 +12,8 @@ Simple stopwatch with animated clock face, created with **flutter_bloc** state m
 ## Screens:
 ![s2](https://user-images.githubusercontent.com/33410494/147411810-8c004c69-2d2b-49ed-ae86-d34c554d8965.png)
 
+## APK Download:
+https://www.mediafire.com/file/64fa7nuj1hrhx8b/gigachad_stopwatch.apk/file
 
 ## File Tree
 
