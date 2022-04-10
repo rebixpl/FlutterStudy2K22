@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stylish/constants.dart';
 import 'package:stylish/screens/home/home_screen.dart';
 
 void main() {
@@ -13,8 +14,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'The Flutter Way',
+      title: 'Shop App UI',
       theme: ThemeData(
+        scaffoldBackgroundColor: kBgColor,
         primarySwatch: Colors.blue,
         fontFamily: "Gordita",
         textTheme: const TextTheme(
