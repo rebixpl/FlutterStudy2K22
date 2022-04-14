@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,35 +25,49 @@ class MyApp extends StatelessWidget {
 }
 
 class Contact {
+  final String id;
   final String name;
 
-  const Contact({
+  Contact({
     required this.name,
-  });
+  }) : id = const Uuid().v4();
 }
 
-class ContactBook {
+// VALUE NOTIFIER is a classic way of state management, currently it's
+// used for very simple cases (and i think bloc is even easier to understand)
+class ContactBook extends ValueNotifier<List<Contact>> {
   // ContactBook is a singleton class
   // private constructor - _ means private
-  ContactBook._sharedInstance();
+  ContactBook._sharedInstance() : super([Contact(name: "Jake")]);
   static final ContactBook _shared = ContactBook._sharedInstance();
   factory ContactBook() => _shared;
 
   // Notice that contacts are PRIVATE list
-  final List<Contact> _contacts = [];
+  //final List<Contact> _contacts = []; // contacts list is no longer needed, as ValueNotifier holds List<Contact> value variable
 
-  int get length => _contacts.length;
+  int get length => value.length;
 
   void add({required Contact contact}) {
-    _contacts.add(contact);
+    // value.add(contact); // this will not notify listeners, because we are not changing entire value, we are just changing internals of this list, so notifyListeners would not be called automatically
+    final contacts =
+        value; // contacts will have the same memory address as value, so
+    // it will be the same variable, thus we don't need to write
+    // 'value = contacts' at the end ???
+    contacts.add(contact);
+    notifyListeners();
   }
 
   void remove({required Contact contact}) {
-    _contacts.remove(contact);
+    // _contacts.remove(contact);
+    final contacts = value;
+    if (contacts.contains(contact)) {
+      contacts.remove(contact);
+      notifyListeners();
+    }
   }
 
   Contact? contact({required int atIndex}) =>
-      _contacts.length > atIndex ? _contacts[atIndex] : null;
+      value.length > atIndex ? value[atIndex] : null;
 }
 
 class HomePage extends StatelessWidget {
@@ -60,17 +75,33 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final contactBook = ContactBook();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
       ),
-      body: ListView.builder(
-        itemCount: contactBook.length,
-        itemBuilder: (BuildContext context, int index) {
-          final contact = contactBook.contact(atIndex: index)!;
-          return ListTile(
-            title: Text(contact.name),
+      body: ValueListenableBuilder(
+        valueListenable: ContactBook(),
+        builder: (context, value, child) {
+          final contacts = value as List<Contact>;
+          return ListView.builder(
+            itemCount: contacts.length,
+            itemBuilder: (BuildContext context, int index) {
+              // final contact = contactBook.contact(atIndex: index)!;
+              final contact = contacts[index];
+              return Dismissible(
+                onDismissed: (direction) {
+                  ContactBook().remove(contact: contact);
+                },
+                key: ValueKey(contact.id),
+                child: Material(
+                  color: Colors.white,
+                  elevation: 10.0,
+                  child: ListTile(
+                    title: Text(contact.name),
+                  ),
+                ),
+              );
+            },
           );
         },
       ),
