@@ -64,17 +64,35 @@ class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final contactBook = ContactBook();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
       ),
-      body: ListView.builder(
-          itemCount: contactBook.length,
-          itemBuilder: (context, i) {
-            final contact = contactBook.contact(atIndex: i)!;
-            return ListTile(title: Text(contact.name));
-          }),
+      body: ValueListenableBuilder(
+        valueListenable: ContactBook(),
+        builder: (context, value, child) {
+          final contacts = value as List<Contact>;
+          return ListView.builder(
+            itemCount: contacts.length,
+            itemBuilder: (context, i) {
+              final contact = contacts[i];
+              return Dismissible(
+                key: ValueKey(contact.id),
+                onDismissed: (direction) {
+                  ContactBook().remove(contact: contact);
+                },
+                child: Material(
+                  color: Colors.white,
+                  elevation: 6.0,
+                  child: ListTile(
+                    title: Text(contact.name),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Navigator.of(context).pushNamed("/new-contact");
