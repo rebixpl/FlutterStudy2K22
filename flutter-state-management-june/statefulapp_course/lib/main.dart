@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 void main() {
   runApp(
@@ -11,6 +12,26 @@ void main() {
       home: const HomePage(),
     ),
   );
+}
+
+class ApiProvider extends InheritedWidget {
+  final Api api;
+  final String uuid;
+
+  ApiProvider({Key? key, required this.api, required Widget child})
+      : uuid = const Uuid().v4(),
+        super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(covariant ApiProvider oldWidget) {
+    // If nothng changed (id stays the same), don't update the widget tree
+    return oldWidget.uuid != uuid;
+  }
+
+  // A way for dependents to get an instance
+  static ApiProvider of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<ApiProvider>()!;
+  }
 }
 
 class HomePage extends StatefulWidget {
@@ -39,5 +60,19 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+}
+
+class Api {
+  String? dateAndTime;
+
+  Future<String> getDateAndTime() {
+    return Future.delayed(
+      const Duration(seconds: 1),
+      (() => DateTime.now().toIso8601String()),
+    ).then((value) {
+      dateAndTime = value;
+      return value;
+    });
   }
 }
