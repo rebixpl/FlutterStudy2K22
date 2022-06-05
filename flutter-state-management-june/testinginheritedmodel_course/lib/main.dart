@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
   runApp(
@@ -29,4 +30,37 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+enum AvailableColors { one, two }
+
+class AvailableColorsModel extends InheritedModel<AvailableColors> {
+  final AvailableColors color1;
+  final AvailableColors color2;
+
+  const AvailableColorsModel({
+    Key? key,
+    required this.color1,
+    required this.color2,
+    required Widget child,
+  }) : super(
+          key: key,
+          child: child,
+        );
+}
+
+final colors = [
+  Colors.blue,
+  Colors.red,
+  Colors.yellow,
+  Colors.orange,
+  Colors.purple,
+  Colors.cyan,
+  Colors.brown,
+  Colors.amber,
+  Colors.deepPurple,
+];
+
+extension RandomElement<T> on Iterable<T> {
+  T getRandomElement() => elementAt(Random().nextInt(length));
 }
