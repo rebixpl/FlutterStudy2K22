@@ -23,11 +23,45 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var _color1 = Colors.yellow;
+  var _color2 = Colors.blue;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
+      ),
+      // This model is internally a ProxyWidget which is a widget and we can normally use it inside body
+      body: AvailableColorsModelWidget(
+        color1: _color1,
+        color2: _color2,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _color1 = colors.getRandomElement();
+                    });
+                  },
+                  child: const Text("Change color1"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _color2 = colors.getRandomElement();
+                    });
+                  },
+                  child: const Text("Change color2"),
+                ),
+              ],
+            ),
+            const ColorWidget(color: AvailableColors.one),
+            const ColorWidget(color: AvailableColors.two),
+          ],
+        ),
       ),
     );
   }
@@ -35,11 +69,11 @@ class _HomePageState extends State<HomePage> {
 
 enum AvailableColors { one, two }
 
-class AvailableColorsModel extends InheritedModel<AvailableColors> {
+class AvailableColorsModelWidget extends InheritedModel<AvailableColors> {
   final MaterialColor color1;
   final MaterialColor color2;
 
-  const AvailableColorsModel({
+  const AvailableColorsModelWidget({
     Key? key,
     required this.color1,
     required this.color2,
@@ -49,26 +83,26 @@ class AvailableColorsModel extends InheritedModel<AvailableColors> {
           child: child,
         );
 
-  static AvailableColorsModel of(
+  static AvailableColorsModelWidget of(
     BuildContext context,
     AvailableColors aspect,
   ) {
-    return InheritedModel.inheritFrom<AvailableColorsModel>(
+    return InheritedModel.inheritFrom<AvailableColorsModelWidget>(
       context,
       aspect: aspect,
     )!;
   }
 
   @override
-  bool updateShouldNotify(covariant AvailableColorsModel oldWidget) {
+  bool updateShouldNotify(covariant AvailableColorsModelWidget oldWidget) {
     // Flutter decided whether any descendant has to be rebuilt by callingupdateShouldNotify()
     devtools.log("updateShouldNotify");
-    return (color1 != oldWidget.color1) || (color2 != oldWidget.color2);
+    return color1 != oldWidget.color1 || color2 != oldWidget.color2;
   }
 
   @override
   bool updateShouldNotifyDependent(
-    covariant AvailableColorsModel oldWidget,
+    covariant AvailableColorsModelWidget oldWidget,
     Set<AvailableColors> dependencies,
   ) {
     // if updateShouldNotify() is true, than this function will be called
@@ -105,7 +139,7 @@ class ColorWidget extends StatelessWidget {
       default:
     }
 
-    final provider = AvailableColorsModel.of(context, color);
+    final provider = AvailableColorsModelWidget.of(context, color);
 
     return Container(
       height: 100.0,
