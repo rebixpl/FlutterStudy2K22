@@ -53,6 +53,7 @@ class BuildInheritedWidget extends StatefulWidget {
   static final _BuildInheritedWidgetState state = _BuildInheritedWidgetState();
 
   @override
+  // ignore: no_logic_in_create_state
   State<BuildInheritedWidget> createState() => state;
 
   static void setState(VoidCallback fn) => state.setState(fn);
@@ -72,26 +73,41 @@ class CounterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            'You have pushed the button this many times:',
-          ),
-          Text(
-            '_counter',
-            style: Theme.of(context).textTheme.headline4,
-          ),
-        ],
+    final provider = InheritedData.of(context)!;
+    return Container(
+      width: 150.0,
+      height: 200.0,
+      margin: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(3.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blueAccent),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '${provider.data}',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class InheritedData extends InheritedWidget {
-  const InheritedData({Key? key, required Widget child})
-      : super(key: key, child: child);
+  final DataField object;
+
+  get data => object.data;
+
+  InheritedData({Key? key, required Widget child})
+      : object = DataField(),
+        super(key: key, child: child);
 
   static InheritedData? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<InheritedData>();
@@ -99,6 +115,11 @@ class InheritedData extends InheritedWidget {
 
   @override
   bool updateShouldNotify(InheritedData oldWidget) {
+    object.data = oldWidget.object.data + 1;
     return true;
   }
+}
+
+class DataField {
+  int data = 0;
 }
