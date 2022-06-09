@@ -35,11 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: BuildInheritedWidget(
-        child: const CounterPage(),
-      ),
+      body: const BuildInheritedWidget(child: CounterPage()),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => ,
+        onPressed: () => BuildInheritedWidget.setState(() {}),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
@@ -48,19 +46,25 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class BuildInheritedWidget extends StatefulWidget {
-  const BuildInheritedWidget({Key? key}) : super(key: key);
+  final Widget child;
 
+  const BuildInheritedWidget({Key? key, required this.child}) : super(key: key);
+
+  static final _BuildInheritedWidgetState state = _BuildInheritedWidgetState();
 
   @override
-  State<BuildInheritedWidget> createState() => _BuildInheritedWidgetState();
+  State<BuildInheritedWidget> createState() => state;
 
+  static void setState(VoidCallback fn) => state.setState(fn);
 }
 
 class _BuildInheritedWidgetState extends State<BuildInheritedWidget> {
   @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
+  Widget build(BuildContext context) => InheritedData(child: widget.child);
+
+  // Override again merely to prevent the warning message
+  @override
+  void setState(VoidCallback fn) => super.setState(fn);
 }
 
 class CounterPage extends StatelessWidget {
@@ -82,5 +86,19 @@ class CounterPage extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class InheritedData extends InheritedWidget {
+  const InheritedData({Key? key, required Widget child})
+      : super(key: key, child: child);
+
+  static InheritedData? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<InheritedData>();
+  }
+
+  @override
+  bool updateShouldNotify(InheritedData oldWidget) {
+    return true;
   }
 }
