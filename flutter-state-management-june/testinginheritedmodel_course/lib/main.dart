@@ -107,7 +107,7 @@ class AvailableColorsModelWidget extends InheritedModel<AvailableColors> {
   ) {
     // if updateShouldNotify() is true, than this function will be called
     devtools.log('updateShouldNotifyDependent');
-
+    devtools.log(dependencies.toList().toString());
     if (dependencies.contains(AvailableColors.one) &&
         color1 != oldWidget.color1) {
       return true;
@@ -140,7 +140,6 @@ class ColorWidget extends StatelessWidget {
     }
 
     final provider = AvailableColorsModelWidget.of(context, color);
-
     return Container(
       height: 100.0,
       color: color == AvailableColors.one ? provider.color1 : provider.color2,
