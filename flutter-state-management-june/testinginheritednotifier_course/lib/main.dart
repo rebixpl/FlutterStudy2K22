@@ -29,6 +29,35 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Home Page"),
       ),
+      body: Column(
+        children: [
+          Slider(
+            value: 0.0,
+            onChanged: (value) {},
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Container(
+                color: Colors.red,
+                height: 200.0,
+              ),
+              Container(
+                color: Colors.blueGrey,
+                height: 200.0,
+              ),
+            ].expandEqually().toList(),
+          ),
+        ],
+      ),
     );
   }
+}
+
+extension ExpandEqually on Iterable<Widget> {
+  Iterable<Widget> expandEqually() => map(
+        (w) => Expanded(
+          child: w,
+        ),
+      );
 }
