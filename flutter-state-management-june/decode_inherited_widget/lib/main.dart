@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:developer' as devtools show log;
 
 void main() {
   runApp(const MyApp());
@@ -31,6 +32,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    devtools.log("Home Page Refreshed");
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -74,6 +76,9 @@ class CounterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = InheritedData.of(context)!;
+
+    devtools.log("Counter Refreshed");
+
     return Container(
       width: 150.0,
       height: 200.0,
